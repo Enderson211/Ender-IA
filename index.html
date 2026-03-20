@@ -3,120 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENDER-IA | Neural Link PRO</title>
+    <title>ENDER-IA v5.0 | Enderson211</title>
     <style>
-        /* Diseño Hacker-Art optimizado para Infinix Smart 9 HD */
-        body {
-            background-color: #000;
-            color: #00ff41;
-            font-family: 'Courier New', monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        .terminal {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(0, 10, 0, 0.95);
-            border: 2px solid #00ff41;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 0 15px #00ff41;
-            display: flex;
-            flex-direction: column;
-        }
-        #chat-log {
-            height: 300px;
-            overflow-y: auto;
-            border-bottom: 1px solid #004400;
-            margin-bottom: 15px;
-            padding: 10px;
-            font-size: 14px;
-            background: #050505;
-        }
-        .msg { margin-bottom: 10px; line-height: 1.3; }
-        .u { color: #58a6ff; font-weight: bold; } /* Usuario en Azul */
-        .i { color: #00ff41; font-weight: bold; } /* IA en Verde */
-        
-        .input-area {
-            display: flex;
-            gap: 8px;
-        }
-        input {
-            flex-grow: 1;
-            background: #000;
-            border: 1px solid #00ff41;
-            color: #00ff41;
-            padding: 12px;
-            border-radius: 5px;
-            outline: none;
-            font-size: 16px; /* Evita zoom automático en Android */
-        }
-        button {
-            background: #00ff41;
-            color: #000;
-            border: none;
-            padding: 10px 15px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; margin: 0; padding: 10px; display: flex; flex-direction: column; height: 100vh; }
+        #terminal { flex-grow: 1; overflow-y: auto; border: 1px solid #00ff41; padding: 15px; background: rgba(0, 255, 65, 0.05); border-radius: 5px; margin-bottom: 10px; font-size: 14px; }
+        .user-line { color: #58a6ff; margin: 5px 0; }
+        .ia-line { color: #00ff41; margin: 10px 0; line-height: 1.4; border-left: 2px solid #00ff41; padding-left: 10px; }
+        .system-msg { color: #ffeb3b; font-style: italic; font-size: 12px; }
+        input { background: #000; border: 1px solid #00ff41; color: #00ff41; padding: 12px; width: 100%; box-sizing: border-box; outline: none; border-radius: 5px; }
+        .loading { animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="terminal">
-        <h3 style="text-align: center; margin-top: 0; letter-spacing: 2px;">🌌 ENDER-IA CORE v3.5</h3>
-        <div id="chat-log">
-            <div class="msg i">>>> NÚCLEO INICIALIZADO.</div>
-            <div class="msg i">>>> Esperando conexión con Google Colab...</div>
-        </div>
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Escribe tu duda o cálculo..." onkeypress="if(event.key==='Enter') procesar()">
-            <button onclick="procesar()">></button>
-        </div>
+    <div id="terminal">
+        <div class="system-msg">[SISTEMA]: Ender-IA v5.0 ONLINE - Creado por Enderson211</div>
+        <div class="system-msg">[ESTADO]: Esperando conexión con Google Colab...</div>
     </div>
 
+    <input type="text" id="userInput" placeholder="Escribe tu pregunta y pulsa Enter..." onkeypress="if(event.key==='Enter') enviar()">
+
     <script>
-        // PEGA AQUÍ TU LINK DE COLAB (Asegúrate de poner la / antes de ia)
-        const ENDPOINT = "https://5000-m-s-kkb-use4a1-12wjmzf8410fh-a.us-east4-1.prod.colab.dev";
+        // 🚨 CAMBIA ESTE LINK CADA VEZ QUE PRENDAS COLAB
+        const ENDPOINT = "https://5000-m-s-2pplbp5uvrh19-c.us-east1-1.prod.colab.devia/";
 
-        async function procesar() {
+        async function enviar() {
             const input = document.getElementById('userInput');
-            const chatLog = document.getElementById('chat-log');
-            const pregunta = input.value.trim();
+            const terminal = document.getElementById('terminal');
+            const mensaje = input.value.trim();
 
-            if (!pregunta) return;
+            if (!mensaje) return;
 
-            // Mostrar pregunta en pantalla
-            chatLog.innerHTML += `<div class="msg u"><b>[USER]:</b> ${pregunta}</div>`;
+            // Mostrar mensaje del usuario
+            terminal.innerHTML += `<div class="user-line"><strong>> ${mensaje}</strong></div>`;
             input.value = "";
-            chatLog.scrollTop = chatLog.scrollHeight;
+            
+            // Efecto de carga
+            const loadId = "load-" + Date.now();
+            terminal.innerHTML += `<div id="${loadId}" class="ia-line loading">Ender-IA está investigando...</div>`;
+            terminal.scrollTop = terminal.scrollHeight;
 
             try {
-                // Enviar datos al cerebro de Google Colab
-                const res = await fetch(ENDPOINT, {
+                const response = await fetch(ENDPOINT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ "pregunta": pregunta })
+                    body: JSON.stringify({ pregunta: mensaje })
                 });
 
-                if (!res.ok) throw new Error("Fallo en la red");
-
-                const data = await res.json();
+                const data = await response.json();
+                document.getElementById(loadId).remove();
                 
-                // Mostrar respuesta inteligente
-                chatLog.innerHTML += `<div class="msg i"><b>[IA]:</b> ${data.respuesta}</div>`;
-            } catch (err) {
-                chatLog.innerHTML += `<div class="msg" style="color:red"><b>[SISTEMA]:</b> Error de enlace. Verifica que Colab esté encendido.</div>`;
+                // Mostrar respuesta humana generada
+                terminal.innerHTML += `<div class="ia-line"><strong>ENDER-IA:</strong> ${data.respuesta}</div>`;
+            } catch (error) {
+                document.getElementById(loadId).innerHTML = "ERROR: El cerebro en Colab está apagado.";
+                document.getElementById(loadId).classList.remove('loading');
+                document.getElementById(loadId).style.color = "red";
             }
-
-            chatLog.scrollTop = chatLog.scrollHeight;
+            terminal.scrollTop = terminal.scrollHeight;
         }
     </script>
 </body>
