@@ -3,113 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ender Prestamista | Sistema Local</title>
+    <title>ENDER PRESTAMISTA | Control de Activos</title>
     <style>
-        :root { --neon: #00d4ff; --bg: #000b1a; --panel: rgba(0, 30, 60, 0.9); }
-        body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
-        
-        /* Contenedor Estilo Tablet */
-        .frame { max-width: 900px; margin: auto; border: 2px solid var(--neon); border-radius: 15px; padding: 20px; box-shadow: 0 0 20px rgba(0,212,255,0.2); background: var(--panel); }
-        
-        h1 { text-align: center; letter-spacing: 5px; text-transform: uppercase; border-bottom: 2px solid var(--neon); padding-bottom: 10px; }
-        
-        /* Formulario oculto para el dueño (TÚ) */
-        #admin-panel { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; border: 1px dashed var(--neon); }
-        input { background: transparent; border: 1px solid var(--neon); color: white; padding: 8px; margin: 5px; border-radius: 4px; }
-        button { background: var(--neon); color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        :root {
+            --neon-blue: #00d4ff;
+            --deep-bg: #000814;
+            --panel-bg: rgba(0, 20, 40, 0.9);
+            --success: #00ffaa;
+            --danger: #ff4444;
+            --warning: #ffcc00;
+        }
 
-        /* Tabla Estilizada */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background: #004466; color: white; padding: 12px; border: 1px solid var(--neon); }
-        td { padding: 10px; border: 1px solid #006699; text-align: center; }
-        .btn-del { background: #ff4444; color: white; border: none; padding: 5px; cursor: pointer; }
+        body {
+            background-color: var(--deep-bg);
+            background-image: radial-gradient(circle, #001a33 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--neon-blue);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-        .footer-tools { margin-top: 20px; text-align: right; }
+        .main-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--panel-bg);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            margin-top: 0;
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .system-status {
+            text-align: center;
+            font-size: 0.8rem;
+            margin-bottom: 30px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        /* PANEL DE CONTROL (ADMIN) */
+        #admin-panel {
+            display: none;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        input, select {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-blue);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        button {
+            background: var(--neon-blue);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        /* TABLA DE REGISTROS */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(0, 212, 255, 0.15);
+            padding: 15px;
+            border-bottom: 2px solid var(--neon-blue);
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            font-size: 1rem;
+        }
+
+        tr:hover { background: rgba(0, 212, 255, 0.05); }
+
+        /* ETIQUETAS DE ESTADO */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        .bg-pending { border: 1px solid var(--warning); color: var(--warning); }
+        .bg-paid { border: 1px solid var(--success); color: var(--success); }
+
+        .btn-delete { background: var(--danger); color: white; padding: 5px 10px; font-size: 0.7rem; }
+        .btn-status { background: #555; color: white; padding: 5px 10px; font-size: 0.7rem; margin-right: 5px; }
+
+        .footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
 
-<div class="frame">
+<div class="main-container">
     <h1>ENDER PRESTAMISTA</h1>
-    <p style="text-align: center; font-size: 0.8rem;">SISTEMA DE GESTIÓN DE ACTIVOS (Bs.VE)</p>
+    <div class="system-status">Terminal de Gestión | Moneda: Bs.VE</div>
 
     <div id="admin-panel">
-        <h3>MODO ADMINISTRADOR: AGREGAR PRÉSTAMO</h3>
-        <input type="text" id="nombre" placeholder="Nombre Estudiante">
-        <input type="number" id="monto" placeholder="Monto (Bs)">
-        <input type="number" id="interes" placeholder="Interés %">
-        <button onclick="agregarPrestamo()">GUARDAR EN SISTEMA</button>
+        <h3 style="margin-top: 0;">🛠️ REGISTRAR NUEVA OPERACIÓN</h3>
+        <div class="form-grid">
+            <input type="text" id="nombre" placeholder="Nombre Estudiante">
+            <input type="number" id="monto" placeholder="Monto Base (Bs)">
+            <input type="number" id="interes" placeholder="Interés % (Ej: 10)">
+            <button onclick="guardar()">CARGAR EN BASE DE DATOS</button>
+        </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ESTUDIANTE</th>
-                <th>MONTO</th>
-                <th>INTERÉS</th>
-                <th>TOTAL A PAGAR</th>
-                <th id="th-accion" style="display:none;">ACCIÓN</th>
-            </tr>
-        </thead>
-        <tbody id="lista-prestamos"></tbody>
-    </table>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>FECHA</th>
+                    <th>ESTUDIANTE</th>
+                    <th>MONTO (Bs)</th>
+                    <th>TOTAL</th>
+                    <th>ESTADO</th>
+                    <th class="admin-only" style="display:none;">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody id="datos-tabla">
+                </tbody>
+        </table>
+    </div>
 
-    <div class="footer-tools">
-        <button onclick="toggleAdmin()">🔑 ENTRAR COMO ENDER</button>
+    <div class="footer">
+        <div>
+            <strong>TOTAL EN CALLE:</strong> <span id="resumen-total">0.00</span> Bs.
+        </div>
+        <button onclick="activarAdmin()" style="background: transparent; color: var(--neon-blue); border: 1px solid var(--neon-blue);">🔑 ACCESO ADMIN</button>
     </div>
 </div>
 
 <script>
-    let prestamos = JSON.parse(localStorage.getItem('mis_prestamos')) || [];
+    let db = JSON.parse(localStorage.getItem('ender_db')) || [];
 
-    function toggleAdmin() {
+    function activarAdmin() {
         const panel = document.getElementById('admin-panel');
-        const th = document.getElementById('th-accion');
-        const isVisible = panel.style.display === 'block';
-        panel.style.display = isVisible ? 'none' : 'block';
-        th.style.display = isVisible ? 'none' : 'table-cell';
-        renderizar();
+        const acciones = document.querySelectorAll('.admin-only');
+        const estaOculto = panel.style.display === 'none' || panel.style.display === '';
+        
+        panel.style.display = estaOculto ? 'block' : 'none';
+        acciones.forEach(el => el.style.display = estaOculto ? 'table-cell' : 'none');
+        render();
     }
 
-    function agregarPrestamo() {
-        const nombre = document.getElementById('nombre').value;
-        const monto = parseFloat(document.getElementById('monto').value);
-        const interes = parseFloat(document.getElementById('interes').value);
+    function guardar() {
+        const nom = document.getElementById('nombre').value;
+        const m = parseFloat(document.getElementById('monto').value);
+        const i = parseFloat(document.getElementById('interes').value || 0);
         
-        if(nombre && monto) {
-            const total = monto + (monto * (interes/100));
-            prestamos.push({ nombre, monto, interes, total });
-            localStorage.setItem('mis_prestamos', JSON.stringify(prestamos));
-            renderizar();
-            alert("Prestamo registrado exitosamente.");
+        if (nom && m) {
+            const fecha = new Date().toLocaleDateString();
+            const total = m + (m * (i / 100));
+            db.push({ fecha, nom, m, total, pagado: false });
+            localStorage.setItem('ender_db', JSON.stringify(db));
+            limpiarInputs();
+            render();
         }
     }
 
-    function borrarPrestamo(index) {
-        prestamos.splice(index, 1);
-        localStorage.setItem('mis_prestamos', JSON.stringify(prestamos));
-        renderizar();
+    function limpiarInputs() {
+        document.getElementById('nombre').value = '';
+        document.getElementById('monto').value = '';
+        document.getElementById('interes').value = '';
     }
 
-    function renderizar() {
-        const tabla = document.getElementById('lista-prestamos');
-        const isAdmin = document.getElementById('admin-panel').style.display === 'block';
+    function cambiarEstado(index) {
+        db[index].pagado = !db[index].pagado;
+        localStorage.setItem('ender_db', JSON.stringify(db));
+        render();
+    }
+
+    function borrar(index) {
+        if(confirm("¿Eliminar este registro permanentemente?")) {
+            db.splice(index, 1);
+            localStorage.setItem('ender_db', JSON.stringify(db));
+            render();
+        }
+    }
+
+    function render() {
+        const tabla = document.getElementById('datos-tabla');
+        const adminVis = document.getElementById('admin-panel').style.display === 'block';
+        let sumaTotal = 0;
         tabla.innerHTML = '';
 
-        prestamos.forEach((p, index) => {
+        db.forEach((p, i) => {
+            if(!p.pagado) sumaTotal += p.total;
+            
             tabla.innerHTML += `
                 <tr>
-                    <td>${p.nombre}</td>
-                    <td>${p.monto} Bs</td>
-                    <td>${p.interes}%</td>
-                    <td style="color: #00ffaa; font-weight: bold;">${p.total} Bs</td>
-                    ${isAdmin ? `<td><button class="btn-del" onclick="borrarPrestamo(${index})">X</button></td>` : ''}
+                    <td>${p.fecha}</td>
+                    <td style="color:#fff">${p.nom}</td>
+                    <td>${p.m.toFixed(2)}</td>
+                    <td style="font-weight:bold">${p.total.toFixed(2)}</td>
+                    <td>
+                        <span class="badge ${p.pagado ? 'bg-paid' : 'bg-pending'}">
+                            ${p.pagado ? 'PAGADO' : 'PENDIENTE'}
+                        </span>
+                    </td>
+                    <td class="admin-only" style="display:${adminVis ? 'table-cell' : 'none'}">
+                        <button class="btn-status" onclick="cambiarEstado(${i})">✓</button>
+                        <button class="btn-delete" onclick="borrar(${i})">X</button>
+                    </td>
                 </tr>
             `;
         });
+        document.getElementById('resumen-total').innerText = sumaTotal.toFixed(2);
     }
 
-    renderizar(); // Cargar datos al abrir
+    render();
 </script>
 
 </body>
