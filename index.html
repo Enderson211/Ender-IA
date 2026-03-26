@@ -3,66 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENDER-IA v5.0 | Enderson211</title>
+    <title>Ender Prestamista | Gestión de Activos</title>
     <style>
-        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; margin: 0; padding: 10px; display: flex; flex-direction: column; height: 100vh; }
-        #terminal { flex-grow: 1; overflow-y: auto; border: 1px solid #00ff41; padding: 15px; background: rgba(0, 255, 65, 0.05); border-radius: 5px; margin-bottom: 10px; font-size: 14px; }
-        .user-line { color: #58a6ff; margin: 5px 0; }
-        .ia-line { color: #00ff41; margin: 10px 0; line-height: 1.4; border-left: 2px solid #00ff41; padding-left: 10px; }
-        .system-msg { color: #ffeb3b; font-style: italic; font-size: 12px; }
-        input { background: #000; border: 1px solid #00ff41; color: #00ff41; padding: 12px; width: 100%; box-sizing: border-box; outline: none; border-radius: 5px; }
-        .loading { animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        :root {
+            --neon-blue: #00d4ff;
+            --dark-bg: #000b1a;
+            --panel-bg: rgba(0, 30, 60, 0.85);
+            --border-tech: #004466;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--neon-blue);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Contenedor Principal Estilo Tablet Tech */
+        .main-frame {
+            width: 95%;
+            max-width: 900px;
+            background: var(--panel-bg);
+            border: 3px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3), inset 0 0 15px rgba(0, 212, 255, 0.1);
+            position: relative;
+        }
+
+        /* Título Principal */
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--neon-blue);
+            border-bottom: 2px solid var(--neon-blue);
+            padding-bottom: 10px;
+        }
+
+        .header-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        /* Estilo de la Tabla */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            background: var(--border-tech);
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+            border: 1px solid var(--neon-blue);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid var(--border-tech);
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        /* Estados */
+        .status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .active { color: #00ffaa; border: 1px solid #00ffaa; }
+        .pending { color: #ffcc00; border: 1px solid #ffcc00; }
+
+        /* Botón de Administración */
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--neon-blue);
+            color: #000;
+            padding: 12px 25px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 50px;
+            box-shadow: 0 0 15px var(--neon-blue);
+            transition: 0.3s;
+        }
+
+        .admin-link:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
     </style>
 </head>
 <body>
 
-    <div id="terminal">
-        <div class="system-msg">[SISTEMA]: Ender-IA v5.0 ONLINE - Creado por Enderson211</div>
-        <div class="system-msg">[ESTADO]: Esperando conexión con Google Colab...</div>
+    <div class="main-frame">
+        <h1>ENDER PRESTAMISTA</h1>
+        
+        <div class="header-stats">
+            <div>SISTEMA: V.1.0 // ONLINE</div>
+            <div>MONEDA: BOLÍVARES (Bs.VE)</div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estudiante / Cliente</th>
+                        <th>Monto (Bs)</th>
+                        <th>Interés</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#001</td>
+                        <td>CARLOS M.</td>
+                        <td>500,00</td>
+                        <td>10%</td>
+                        <td>550,00</td>
+                        <td><div class="status active">ACTIVO</div></td>
+                    </tr>
+                    <tr>
+                        <td>#002</td>
+                        <td>MARÍA J.</td>
+                        <td>1.200,00</td>
+                        <td>15%</td>
+                        <td>1.380,00</td>
+                        <td><div class="status pending">PENDIENTE</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <input type="text" id="userInput" placeholder="Escribe tu pregunta y pulsa Enter..." onkeypress="if(event.key==='Enter') enviar()">
+    <a href="https://docs.google.com/spreadsheets" target="_blank" class="admin-link">ACCESO ADMIN</a>
 
-    <script>
-        // 🚨 CAMBIA ESTE LINK CADA VEZ QUE PRENDAS COLAB
-        const ENDPOINT = "https://5000-m-s-2pplbp5uvrh19-c.us-east1-1.prod.colab.devia/";
-
-        async function enviar() {
-            const input = document.getElementById('userInput');
-            const terminal = document.getElementById('terminal');
-            const mensaje = input.value.trim();
-
-            if (!mensaje) return;
-
-            // Mostrar mensaje del usuario
-            terminal.innerHTML += `<div class="user-line"><strong>> ${mensaje}</strong></div>`;
-            input.value = "";
-            
-            // Efecto de carga
-            const loadId = "load-" + Date.now();
-            terminal.innerHTML += `<div id="${loadId}" class="ia-line loading">Ender-IA está investigando...</div>`;
-            terminal.scrollTop = terminal.scrollHeight;
-
-            try {
-                const response = await fetch(ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pregunta: mensaje })
-                });
-
-                const data = await response.json();
-                document.getElementById(loadId).remove();
-                
-                // Mostrar respuesta humana generada
-                terminal.innerHTML += `<div class="ia-line"><strong>ENDER-IA:</strong> ${data.respuesta}</div>`;
-            } catch (error) {
-                document.getElementById(loadId).innerHTML = "ERROR: El cerebro en Colab está apagado.";
-                document.getElementById(loadId).classList.remove('loading');
-                document.getElementById(loadId).style.color = "red";
-            }
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-    </script>
 </body>
 </html>
