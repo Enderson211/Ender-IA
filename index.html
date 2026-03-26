@@ -3,256 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENDER PRESTAMISTA | CONTROL TOTAL</title>
+    <title>ENDER PRESTAMISTA | Gestión de Activos</title>
     <style>
         :root {
             --cyan: #00f2ff;
             --blue: #0044ff;
-            --dark: #00050a;
-            --glass: rgba(0, 20, 40, 0.95);
+            --bg: #000b1a;
+            --panel: rgba(0, 20, 40, 0.9);
             --success: #00ff88;
-            --danger: #ff0044;
         }
 
         body {
-            background: var(--dark);
+            background: var(--bg);
             color: var(--cyan);
-            font-family: 'Orbitron', sans-serif; /* Estilo futurista */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 50px 20px;
+            padding: 10px;
             display: flex;
             justify-content: center;
         }
 
-        /* Contenedor Gigante */
-        .ultra-frame {
+        /* Contenedor que se adapta al tamaño de la pantalla */
+        .frame {
             width: 100%;
-            max-width: 1300px;
-            background: var(--glass);
-            border: 4px solid var(--blue);
-            border-radius: 30px;
-            padding: 50px;
-            box-shadow: 0 0 60px rgba(0, 68, 255, 0.4), inset 0 0 20px rgba(0, 242, 255, 0.1);
-            position: relative;
+            max-width: 1000px;
+            background: var(--panel);
+            border: 2px solid var(--blue);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 25px rgba(0, 68, 255, 0.3);
+            box-sizing: border-box; /* Evita que el contenido se salga */
         }
 
         h1 {
             text-align: center;
-            font-size: 3.5rem;
-            letter-spacing: 15px;
-            margin: 0;
+            font-size: clamp(1.5rem, 5vw, 2.5rem); /* Tamaño fluido */
+            letter-spacing: 5px;
             text-transform: uppercase;
-            text-shadow: 0 0 20px var(--cyan);
-        }
-
-        .status-bar {
-            text-align: center;
+            margin: 10px 0;
             border-bottom: 2px solid var(--blue);
-            padding-bottom: 20px;
-            margin-bottom: 40px;
-            font-size: 1.2rem;
-            letter-spacing: 3px;
-            color: #fff;
+            padding-bottom: 10px;
         }
 
-        /* Panel Admin Grande */
+        .status-text {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        /* Panel Admin Adaptable */
         #admin-panel {
             display: none;
             background: rgba(0, 242, 255, 0.05);
-            border: 2px dashed var(--cyan);
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 50px;
+            border: 1px dashed var(--cyan);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
 
-        .input-group {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
         }
 
         input {
-            flex: 1;
             background: #000;
-            border: 2px solid var(--blue);
+            border: 1px solid var(--blue);
             color: #fff;
-            padding: 20px;
-            font-size: 1.2rem;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 5px;
             outline: none;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        input:focus { border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
-
-        .btn-main {
+        .btn-add {
             background: var(--cyan);
             color: #000;
             font-weight: bold;
-            padding: 20px 40px;
-            font-size: 1.2rem;
             border: none;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 5px;
             cursor: pointer;
-            text-transform: uppercase;
         }
 
-        /* Tabla Gigante */
+        /* Tabla que permite scroll en móviles para no romperse */
+        .table-scroll {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 15px;
+            border-collapse: collapse;
+            min-width: 600px; /* Asegura que la tabla sea legible */
         }
 
         th {
-            font-size: 1.3rem;
-            padding: 20px;
+            background: rgba(0, 68, 255, 0.2);
+            padding: 12px;
             text-align: left;
-            text-transform: uppercase;
-            color: var(--cyan);
-            border-bottom: 3px solid var(--blue);
+            font-size: 0.9rem;
+            border-bottom: 2px solid var(--cyan);
         }
 
         td {
-            background: rgba(0, 68, 255, 0.1);
-            padding: 25px;
-            font-size: 1.4rem;
-            color: #fff;
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+            font-size: 0.95rem;
         }
 
-        td:first-child { border-radius: 15px 0 0 15px; border-left: 5px solid var(--blue); }
-        td:last-child { border-radius: 0 15px 15px 0; }
-
-        /* Estados */
         .badge {
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
             font-weight: bold;
-            font-size: 1rem;
         }
-        .pending { border: 2px solid #ffcc00; color: #ffcc00; background: rgba(255, 204, 0, 0.1); }
-        .paid { border: 2px solid var(--success); color: var(--success); background: rgba(0, 255, 136, 0.1); }
-
-        .money { color: var(--success); font-weight: bold; }
+        .debe { border: 1px solid #ffcc00; color: #ffcc00; }
+        .pago { border: 1px solid var(--success); color: var(--success); }
 
         .footer {
-            margin-top: 50px;
+            margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 30px;
-            border-radius: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .total-box { font-size: 2rem; }
+        .total { font-size: 1.2rem; font-weight: bold; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="ultra-frame">
+<div class="frame">
     <h1>ENDER PRESTAMISTA</h1>
-    <div class="status-bar">SISTEMA CENTRAL DE PRÉSTAMOS // VALOR: Bs.VE</div>
+    <div class="status-text">GESTIÓN DE CAPITAL // BOLÍVARES (Bs.VE)</div>
 
     <div id="admin-panel">
-        <h2 style="margin-top:0">➕ REGISTRAR NUEVO MOVIMIENTO</h2>
-        <div class="input-group">
+        <div class="form-grid">
             <input type="text" id="nombre" placeholder="Nombre Estudiante">
-            <input type="number" id="monto" placeholder="Monto Base (Bs)">
-            <input type="number" id="interes" placeholder="Interés a Sumar (Bs)">
-            <button class="btn-main" onclick="guardar()">CARGAR AL SISTEMA</button>
+            <input type="number" id="monto" placeholder="Monto Base">
+            <input type="number" id="extra" placeholder="+ Interés (Bs)">
+            <button class="btn-add" onclick="guardar()">GUARDAR</button>
         </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Estudiante</th>
-                <th>Base</th>
-                <th>+ Interés</th>
-                <th>Total a Pagar</th>
-                <th>Estado</th>
-                <th class="admin-only" style="display:none">Acción</th>
-            </tr>
-        </thead>
-        <tbody id="datos"></tbody>
-    </table>
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Nombre</th>
+                    <th>Base</th>
+                    <th>Interés</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th class="adm" style="display:none">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="datos"></tbody>
+        </table>
+    </div>
 
     <div class="footer">
-        <div class="total-box">
-            SALDO EN CALLE: <span id="total-calle" style="color:var(--cyan)">0.00</span> Bs.
-        </div>
-        <button onclick="toggleAdmin()" style="background:transparent; color:var(--cyan); border:2px solid var(--cyan); padding:15px; cursor:pointer; border-radius:10px;">🔑 PANEL DE CONTROL</button>
+        <div class="total">CALLE: <span id="total-val" style="color:var(--success)">0.00</span> Bs.</div>
+        <button onclick="toggleAdmin()" style="background:transparent; color:var(--cyan); border:1px solid var(--cyan); padding:8px 15px; cursor:pointer; border-radius:5px;">🔑 ADMIN</button>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('ender_db_v2')) || [];
+    let db = JSON.parse(localStorage.getItem('ender_final_db')) || [];
 
     function toggleAdmin() {
         const p = document.getElementById('admin-panel');
-        const isHidden = p.style.display === 'none' || p.style.display === '';
-        p.style.display = isHidden ? 'block' : 'none';
+        p.style.display = p.style.display === 'block' ? 'none' : 'block';
         render();
     }
 
     function guardar() {
-        const nom = document.getElementById('nombre').value;
-        const base = parseFloat(document.getElementById('monto').value);
-        const extra = parseFloat(document.getElementById('interes').value || 0);
+        const n = document.getElementById('nombre').value;
+        const b = parseFloat(document.getElementById('monto').value);
+        const e = parseFloat(document.getElementById('extra').value || 0);
         
-        if (nom && !isNaN(base)) {
-            const fecha = new Date().toLocaleDateString();
-            const total = base + extra; // SUMA DIRECTA DE BOLOS
-            db.push({ fecha, nom, base, extra, total, pagado: false });
-            localStorage.setItem('ender_db_v2', JSON.stringify(db));
+        if (n && !isNaN(b)) {
+            const f = new Date().toLocaleDateString();
+            db.push({ f, n, b, e, t: (b + e), p: false });
+            localStorage.setItem('ender_final_db', JSON.stringify(db));
             document.getElementById('nombre').value = '';
             document.getElementById('monto').value = '';
-            document.getElementById('interes').value = '';
+            document.getElementById('extra').value = '';
             render();
         }
     }
 
-    function borrar(idx) {
-        if(confirm("¿Eliminar registro?")) {
-            db.splice(idx, 1);
-            localStorage.setItem('ender_db_v2', JSON.stringify(db));
-            render();
-        }
-    }
-
-    function pagar(idx) {
-        db[idx].pagado = !db[idx].pagado;
-        localStorage.setItem('ender_db_v2', JSON.stringify(db));
-        render();
-    }
+    function status(i) { db[i].p = !db[i].p; save(); }
+    function borrar(i) { if(confirm("¿Borrar?")) { db.splice(i, 1); save(); } }
+    function save() { localStorage.setItem('ender_final_db', JSON.stringify(db)); render(); }
 
     function render() {
-        const body = document.getElementById('datos');
-        const adminOn = document.getElementById('admin-panel').style.display === 'block';
-        let deudaTotal = 0;
-        body.innerHTML = '';
+        const list = document.getElementById('datos');
+        const isAdmin = document.getElementById('admin-panel').style.display === 'block';
+        const admHeader = document.querySelector('.adm');
+        let totalCalle = 0;
+        
+        admHeader.style.display = isAdmin ? 'table-cell' : 'none';
+        list.innerHTML = '';
 
-        db.forEach((p, i) => {
-            if(!p.pagado) deudaTotal += p.total;
-            
-            body.innerHTML += `
+        db.forEach((item, i) => {
+            if(!item.p) totalCalle += item.t;
+            list.innerHTML += `
                 <tr>
-                    <td>${p.fecha}</td>
-                    <td>${p.nom}</td>
-                    <td>${p.base.toFixed(2)}</td>
-                    <td style="color:#ffcc00">+${p.extra.toFixed(2)}</td>
-                    <td class="money">${p.total.toFixed(2)} Bs</td>
-                    <td><span class="badge ${p.pagado ? 'paid' : 'pending'}">${p.pagado ? 'COBRADO' : 'DEBE'}</span></td>
-                    ${adminOn ? `<td>
-                        <button onclick="pagar(${i})" style="background:#00ff88; border:none; padding:10px; cursor:pointer; border-radius:5px; margin-right:5px;">✔</button>
-                        <button onclick="borrar(${i})" style="background:#ff0044; border:none; padding:10px; color:white; cursor:pointer; border-radius:5px;">X</button>
+                    <td>${item.f}</td>
+                    <td style="color:#fff">${item.n}</td>
+                    <td>${item.b}</td>
+                    <td>+${item.e}</td>
+                    <td style="font-weight:bold">${item.t}</td>
+                    <td><span class="badge ${item.p ? 'pago' : 'debe'}">${item.p ? 'PAGÓ' : 'DEBE'}</span></td>
+                    ${isAdmin ? `<td>
+                        <button onclick="status(${i})" style="background:#00ff88; border:none; border-radius:3px; cursor:pointer;">✔</button>
+                        <button onclick="borrar(${i})" style="background:#ff4444; border:none; border-radius:3px; color:white; cursor:pointer;">X</button>
                     </td>` : ''}
                 </tr>
             `;
         });
-        document.getElementById('total-calle').innerText = deudaTotal.toFixed(2);
+        document.getElementById('total-val').innerText = totalCalle.toFixed(2);
     }
     render();
 </script>
