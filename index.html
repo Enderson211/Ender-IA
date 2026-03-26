@@ -3,268 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENDER PRESTAMISTA | Control de Activos</title>
+    <title>ENDER PRESTAMISTA | CONTROL TOTAL</title>
     <style>
         :root {
-            --neon-blue: #00d4ff;
-            --deep-bg: #000814;
-            --panel-bg: rgba(0, 20, 40, 0.9);
-            --success: #00ffaa;
-            --danger: #ff4444;
-            --warning: #ffcc00;
+            --cyan: #00f2ff;
+            --blue: #0044ff;
+            --dark: #00050a;
+            --glass: rgba(0, 20, 40, 0.95);
+            --success: #00ff88;
+            --danger: #ff0044;
         }
 
         body {
-            background-color: var(--deep-bg);
-            background-image: radial-gradient(circle, #001a33 1px, transparent 1px);
-            background-size: 30px 30px;
-            color: var(--neon-blue);
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark);
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif; /* Estilo futurista */
             margin: 0;
-            padding: 40px 20px;
+            padding: 50px 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
         }
 
-        .main-container {
+        /* Contenedor Gigante */
+        .ultra-frame {
             width: 100%;
-            max-width: 1100px;
-            background: var(--panel-bg);
-            border: 2px solid var(--neon-blue);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
-            backdrop-filter: blur(10px);
+            max-width: 1300px;
+            background: var(--glass);
+            border: 4px solid var(--blue);
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 0 60px rgba(0, 68, 255, 0.4), inset 0 0 20px rgba(0, 242, 255, 0.1);
+            position: relative;
         }
 
         h1 {
             text-align: center;
-            font-size: 2.5rem;
-            letter-spacing: 10px;
+            font-size: 3.5rem;
+            letter-spacing: 15px;
+            margin: 0;
             text-transform: uppercase;
-            margin-top: 0;
-            text-shadow: 0 0 15px var(--neon-blue);
+            text-shadow: 0 0 20px var(--cyan);
         }
 
-        .system-status {
+        .status-bar {
             text-align: center;
-            font-size: 0.8rem;
-            margin-bottom: 30px;
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
             color: #fff;
-            text-transform: uppercase;
         }
 
-        /* PANEL DE CONTROL (ADMIN) */
+        /* Panel Admin Grande */
         #admin-panel {
             display: none;
-            background: rgba(0, 212, 255, 0.05);
-            border: 1px solid var(--neon-blue);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+            background: rgba(0, 242, 255, 0.05);
+            border: 2px dashed var(--cyan);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 50px;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+        .input-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        input, select {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--neon-blue);
+        input {
+            flex: 1;
+            background: #000;
+            border: 2px solid var(--blue);
             color: #fff;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 20px;
+            font-size: 1.2rem;
+            border-radius: 10px;
             outline: none;
         }
 
-        button {
-            background: var(--neon-blue);
+        input:focus { border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+
+        .btn-main {
+            background: var(--cyan);
             color: #000;
-            border: none;
-            padding: 12px 25px;
             font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 8px;
+            padding: 20px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            transition: 0.3s;
+            text-transform: uppercase;
         }
 
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        /* TABLA DE REGISTROS */
-        .table-wrapper {
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-
+        /* Tabla Gigante */
         table {
             width: 100%;
-            border-collapse: collapse;
-            text-align: left;
+            border-collapse: separate;
+            border-spacing: 0 15px;
         }
 
         th {
-            background: rgba(0, 212, 255, 0.15);
-            padding: 15px;
-            border-bottom: 2px solid var(--neon-blue);
-            font-size: 0.9rem;
+            font-size: 1.3rem;
+            padding: 20px;
+            text-align: left;
+            text-transform: uppercase;
+            color: var(--cyan);
+            border-bottom: 3px solid var(--blue);
         }
 
         td {
-            padding: 15px;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            background: rgba(0, 68, 255, 0.1);
+            padding: 25px;
+            font-size: 1.4rem;
+            color: #fff;
+        }
+
+        td:first-child { border-radius: 15px 0 0 15px; border-left: 5px solid var(--blue); }
+        td:last-child { border-radius: 0 15px 15px 0; }
+
+        /* Estados */
+        .badge {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
             font-size: 1rem;
         }
+        .pending { border: 2px solid #ffcc00; color: #ffcc00; background: rgba(255, 204, 0, 0.1); }
+        .paid { border: 2px solid var(--success); color: var(--success); background: rgba(0, 255, 136, 0.1); }
 
-        tr:hover { background: rgba(0, 212, 255, 0.05); }
-
-        /* ETIQUETAS DE ESTADO */
-        .badge {
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-        .bg-pending { border: 1px solid var(--warning); color: var(--warning); }
-        .bg-paid { border: 1px solid var(--success); color: var(--success); }
-
-        .btn-delete { background: var(--danger); color: white; padding: 5px 10px; font-size: 0.7rem; }
-        .btn-status { background: #555; color: white; padding: 5px 10px; font-size: 0.7rem; margin-right: 5px; }
+        .money { color: var(--success); font-weight: bold; }
 
         .footer {
-            margin-top: 30px;
+            margin-top: 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 20px;
         }
+
+        .total-box { font-size: 2rem; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="main-container">
+<div class="ultra-frame">
     <h1>ENDER PRESTAMISTA</h1>
-    <div class="system-status">Terminal de Gestión | Moneda: Bs.VE</div>
+    <div class="status-bar">SISTEMA CENTRAL DE PRÉSTAMOS // VALOR: Bs.VE</div>
 
     <div id="admin-panel">
-        <h3 style="margin-top: 0;">🛠️ REGISTRAR NUEVA OPERACIÓN</h3>
-        <div class="form-grid">
+        <h2 style="margin-top:0">➕ REGISTRAR NUEVO MOVIMIENTO</h2>
+        <div class="input-group">
             <input type="text" id="nombre" placeholder="Nombre Estudiante">
             <input type="number" id="monto" placeholder="Monto Base (Bs)">
-            <input type="number" id="interes" placeholder="Interés % (Ej: 10)">
-            <button onclick="guardar()">CARGAR EN BASE DE DATOS</button>
+            <input type="number" id="interes" placeholder="Interés a Sumar (Bs)">
+            <button class="btn-main" onclick="guardar()">CARGAR AL SISTEMA</button>
         </div>
     </div>
 
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>FECHA</th>
-                    <th>ESTUDIANTE</th>
-                    <th>MONTO (Bs)</th>
-                    <th>TOTAL</th>
-                    <th>ESTADO</th>
-                    <th class="admin-only" style="display:none;">ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody id="datos-tabla">
-                </tbody>
-        </table>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Estudiante</th>
+                <th>Base</th>
+                <th>+ Interés</th>
+                <th>Total a Pagar</th>
+                <th>Estado</th>
+                <th class="admin-only" style="display:none">Acción</th>
+            </tr>
+        </thead>
+        <tbody id="datos"></tbody>
+    </table>
 
     <div class="footer">
-        <div>
-            <strong>TOTAL EN CALLE:</strong> <span id="resumen-total">0.00</span> Bs.
+        <div class="total-box">
+            SALDO EN CALLE: <span id="total-calle" style="color:var(--cyan)">0.00</span> Bs.
         </div>
-        <button onclick="activarAdmin()" style="background: transparent; color: var(--neon-blue); border: 1px solid var(--neon-blue);">🔑 ACCESO ADMIN</button>
+        <button onclick="toggleAdmin()" style="background:transparent; color:var(--cyan); border:2px solid var(--cyan); padding:15px; cursor:pointer; border-radius:10px;">🔑 PANEL DE CONTROL</button>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('ender_db')) || [];
+    let db = JSON.parse(localStorage.getItem('ender_db_v2')) || [];
 
-    function activarAdmin() {
-        const panel = document.getElementById('admin-panel');
-        const acciones = document.querySelectorAll('.admin-only');
-        const estaOculto = panel.style.display === 'none' || panel.style.display === '';
-        
-        panel.style.display = estaOculto ? 'block' : 'none';
-        acciones.forEach(el => el.style.display = estaOculto ? 'table-cell' : 'none');
+    function toggleAdmin() {
+        const p = document.getElementById('admin-panel');
+        const isHidden = p.style.display === 'none' || p.style.display === '';
+        p.style.display = isHidden ? 'block' : 'none';
         render();
     }
 
     function guardar() {
         const nom = document.getElementById('nombre').value;
-        const m = parseFloat(document.getElementById('monto').value);
-        const i = parseFloat(document.getElementById('interes').value || 0);
+        const base = parseFloat(document.getElementById('monto').value);
+        const extra = parseFloat(document.getElementById('interes').value || 0);
         
-        if (nom && m) {
+        if (nom && !isNaN(base)) {
             const fecha = new Date().toLocaleDateString();
-            const total = m + (m * (i / 100));
-            db.push({ fecha, nom, m, total, pagado: false });
-            localStorage.setItem('ender_db', JSON.stringify(db));
-            limpiarInputs();
+            const total = base + extra; // SUMA DIRECTA DE BOLOS
+            db.push({ fecha, nom, base, extra, total, pagado: false });
+            localStorage.setItem('ender_db_v2', JSON.stringify(db));
+            document.getElementById('nombre').value = '';
+            document.getElementById('monto').value = '';
+            document.getElementById('interes').value = '';
             render();
         }
     }
 
-    function limpiarInputs() {
-        document.getElementById('nombre').value = '';
-        document.getElementById('monto').value = '';
-        document.getElementById('interes').value = '';
+    function borrar(idx) {
+        if(confirm("¿Eliminar registro?")) {
+            db.splice(idx, 1);
+            localStorage.setItem('ender_db_v2', JSON.stringify(db));
+            render();
+        }
     }
 
-    function cambiarEstado(index) {
-        db[index].pagado = !db[index].pagado;
-        localStorage.setItem('ender_db', JSON.stringify(db));
+    function pagar(idx) {
+        db[idx].pagado = !db[idx].pagado;
+        localStorage.setItem('ender_db_v2', JSON.stringify(db));
         render();
     }
 
-    function borrar(index) {
-        if(confirm("¿Eliminar este registro permanentemente?")) {
-            db.splice(index, 1);
-            localStorage.setItem('ender_db', JSON.stringify(db));
-            render();
-        }
-    }
-
     function render() {
-        const tabla = document.getElementById('datos-tabla');
-        const adminVis = document.getElementById('admin-panel').style.display === 'block';
-        let sumaTotal = 0;
-        tabla.innerHTML = '';
+        const body = document.getElementById('datos');
+        const adminOn = document.getElementById('admin-panel').style.display === 'block';
+        let deudaTotal = 0;
+        body.innerHTML = '';
 
         db.forEach((p, i) => {
-            if(!p.pagado) sumaTotal += p.total;
+            if(!p.pagado) deudaTotal += p.total;
             
-            tabla.innerHTML += `
+            body.innerHTML += `
                 <tr>
                     <td>${p.fecha}</td>
-                    <td style="color:#fff">${p.nom}</td>
-                    <td>${p.m.toFixed(2)}</td>
-                    <td style="font-weight:bold">${p.total.toFixed(2)}</td>
-                    <td>
-                        <span class="badge ${p.pagado ? 'bg-paid' : 'bg-pending'}">
-                            ${p.pagado ? 'PAGADO' : 'PENDIENTE'}
-                        </span>
-                    </td>
-                    <td class="admin-only" style="display:${adminVis ? 'table-cell' : 'none'}">
-                        <button class="btn-status" onclick="cambiarEstado(${i})">✓</button>
-                        <button class="btn-delete" onclick="borrar(${i})">X</button>
-                    </td>
+                    <td>${p.nom}</td>
+                    <td>${p.base.toFixed(2)}</td>
+                    <td style="color:#ffcc00">+${p.extra.toFixed(2)}</td>
+                    <td class="money">${p.total.toFixed(2)} Bs</td>
+                    <td><span class="badge ${p.pagado ? 'paid' : 'pending'}">${p.pagado ? 'COBRADO' : 'DEBE'}</span></td>
+                    ${adminOn ? `<td>
+                        <button onclick="pagar(${i})" style="background:#00ff88; border:none; padding:10px; cursor:pointer; border-radius:5px; margin-right:5px;">✔</button>
+                        <button onclick="borrar(${i})" style="background:#ff0044; border:none; padding:10px; color:white; cursor:pointer; border-radius:5px;">X</button>
+                    </td>` : ''}
                 </tr>
             `;
         });
-        document.getElementById('resumen-total').innerText = sumaTotal.toFixed(2);
+        document.getElementById('total-calle').innerText = deudaTotal.toFixed(2);
     }
-
     render();
 </script>
 
