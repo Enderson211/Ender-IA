@@ -3,236 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENDER PRESTAMISTA | Gestión de Activos</title>
+    <title>Ender Hub | Pro</title>
     <style>
         :root {
-            --cyan: #00f2ff;
-            --blue: #0044ff;
-            --bg: #000b1a;
-            --panel: rgba(0, 20, 40, 0.9);
-            --success: #00ff88;
+            --bg-dark: #0b0e14;
+            --accent-blue: #00e5ff;
         }
-
         body {
-            background: var(--bg);
-            color: var(--cyan);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 10px;
+            padding: 0;
+            background-color: var(--bg-dark);
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+        /* BARRA DE NAVEGACIÓN SEGURA */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
-            justify-content: center;
-        }
-
-        /* Contenedor que se adapta al tamaño de la pantalla */
-        .frame {
-            width: 100%;
-            max-width: 1000px;
-            background: var(--panel);
-            border: 2px solid var(--blue);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 0 25px rgba(0, 68, 255, 0.3);
-            box-sizing: border-box; /* Evita que el contenido se salga */
-        }
-
-        h1 {
-            text-align: center;
-            font-size: clamp(1.5rem, 5vw, 2.5rem); /* Tamaño fluido */
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            margin: 10px 0;
-            border-bottom: 2px solid var(--blue);
-            padding-bottom: 10px;
-        }
-
-        .status-text {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-
-        /* Panel Admin Adaptable */
-        #admin-panel {
-            display: none;
-            background: rgba(0, 242, 255, 0.05);
-            border: 1px dashed var(--cyan);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-        }
-
-        input {
-            background: #000;
-            border: 1px solid var(--blue);
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            outline: none;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .btn-add {
-            background: var(--cyan);
-            color: #000;
-            font-weight: bold;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Tabla que permite scroll en móviles para no romperse */
-        .table-scroll {
-            width: 100%;
-            overflow-x: auto;
-            margin-top: 15px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px; /* Asegura que la tabla sea legible */
-        }
-
-        th {
-            background: rgba(0, 68, 255, 0.2);
-            padding: 12px;
-            text-align: left;
-            font-size: 0.9rem;
-            border-bottom: 2px solid var(--cyan);
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
-            font-size: 0.95rem;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-        .debe { border: 1px solid #ffcc00; color: #ffcc00; }
-        .pago { border: 1px solid var(--success); color: var(--success); }
-
-        .footer {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--accent-blue);
         }
+        .nav-btn {
+            background: none;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        /* CONTENEDOR DE COLORES INFINITOS */
+        #color-container {
+            margin-top: 70px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 10px;
+        }
+        .color-card {
+            height: 150px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .color-card:active { transform: scale(0.95); }
 
-        .total { font-size: 1.2rem; font-weight: bold; }
+        /* MODALES DE CONTRASEÑA */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        input {
+            padding: 15px;
+            width: 80%;
+            max-width: 300px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
 
-<div class="frame">
-    <h1>ENDER PRESTAMISTA</h1>
-    <div class="status-text">GESTIÓN DE CAPITAL // BOLÍVARES (Bs.VE)</div>
+<nav class="navbar">
+    <button class="nav-btn" onclick="openGate('prestamista')">E. Prestamista</button>
+    <button class="nav-btn" onclick="openGate('estudio')">E. Estudio</button>
+</nav>
 
-    <div id="admin-panel">
-        <div class="form-grid">
-            <input type="text" id="nombre" placeholder="Nombre Estudiante">
-            <input type="number" id="monto" placeholder="Monto Base">
-            <input type="number" id="extra" placeholder="+ Interés (Bs)">
-            <button class="btn-add" onclick="guardar()">GUARDAR</button>
-        </div>
-    </div>
+<div id="color-container"></div>
 
-    <div class="table-scroll">
-        <table>
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Nombre</th>
-                    <th>Base</th>
-                    <th>Interés</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th class="adm" style="display:none">Acción</th>
-                </tr>
-            </thead>
-            <tbody id="datos"></tbody>
-        </table>
-    </div>
-
-    <div class="footer">
-        <div class="total">CALLE: <span id="total-val" style="color:var(--success)">0.00</span> Bs.</div>
-        <button onclick="toggleAdmin()" style="background:transparent; color:var(--cyan); border:1px solid var(--cyan); padding:8px 15px; cursor:pointer; border-radius:5px;">🔑 ADMIN</button>
-    </div>
+<div id="security-modal" class="modal">
+    <h2 id="modal-title">Acceso Restringido</h2>
+    <input type="password" id="pass-input" placeholder="Ingresa la clave">
+    <button class="nav-btn" onclick="checkPass()">Entrar</button>
+    <button style="margin-top: 10px; color: red; background: none; border: none;" onclick="closeModal()">Cancelar</button>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('ender_final_db')) || [];
-
-    function toggleAdmin() {
-        const p = document.getElementById('admin-panel');
-        p.style.display = p.style.display === 'block' ? 'none' : 'block';
-        render();
-    }
-
-    function guardar() {
-        const n = document.getElementById('nombre').value;
-        const b = parseFloat(document.getElementById('monto').value);
-        const e = parseFloat(document.getElementById('extra').value || 0);
+    const container = document.getElementById('color-container');
+    let currentTarget = "";
+    
+    // 1. GENERACIÓN DE COLORES OPTIMIZADA
+    // Usamos un observer para no cargar 1 millón de colores de golpe
+    function generateColors(count) {
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < count; i++) {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            const hex = `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`.toUpperCase();
+            
+            const card = document.createElement('div');
+            card.className = 'color-card';
+            card.style.backgroundColor = hex;
+            card.innerHTML = `<span>${hex}</span>`;
+            card.onclick = () => {
+                navigator.clipboard.writeText(hex);
+                alert('Copiado: ' + hex);
+            };
+            fragment.appendChild(card);
+        }
+        container.appendChild(fragment);
         
-        if (n && !isNaN(b)) {
-            const f = new Date().toLocaleDateString();
-            db.push({ f, n, b, e, t: (b + e), p: false });
-            localStorage.setItem('ender_final_db', JSON.stringify(db));
-            document.getElementById('nombre').value = '';
-            document.getElementById('monto').value = '';
-            document.getElementById('extra').value = '';
-            render();
+        // Optimización: Si hay más de 200 elementos, borramos los primeros para liberar RAM
+        if (container.children.length > 200) {
+            for(let i=0; i<50; i++) container.removeChild(container.firstChild);
         }
     }
 
-    function status(i) { db[i].p = !db[i].p; save(); }
-    function borrar(i) { if(confirm("¿Borrar?")) { db.splice(i, 1); save(); } }
-    function save() { localStorage.setItem('ender_final_db', JSON.stringify(db)); render(); }
+    // Carga inicial
+    generateColors(40);
 
-    function render() {
-        const list = document.getElementById('datos');
-        const isAdmin = document.getElementById('admin-panel').style.display === 'block';
-        const admHeader = document.querySelector('.adm');
-        let totalCalle = 0;
-        
-        admHeader.style.display = isAdmin ? 'table-cell' : 'none';
-        list.innerHTML = '';
+    // Scroll Infinito
+    window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+            generateColors(20);
+        }
+    });
 
-        db.forEach((item, i) => {
-            if(!item.p) totalCalle += item.t;
-            list.innerHTML += `
-                <tr>
-                    <td>${item.f}</td>
-                    <td style="color:#fff">${item.n}</td>
-                    <td>${item.b}</td>
-                    <td>+${item.e}</td>
-                    <td style="font-weight:bold">${item.t}</td>
-                    <td><span class="badge ${item.p ? 'pago' : 'debe'}">${item.p ? 'PAGÓ' : 'DEBE'}</span></td>
-                    ${isAdmin ? `<td>
-                        <button onclick="status(${i})" style="background:#00ff88; border:none; border-radius:3px; cursor:pointer;">✔</button>
-                        <button onclick="borrar(${i})" style="background:#ff4444; border:none; border-radius:3px; color:white; cursor:pointer;">X</button>
-                    </td>` : ''}
-                </tr>
-            `;
-        });
-        document.getElementById('total-val').innerText = totalCalle.toFixed(2);
+    // 2. SISTEMA DE SEGURIDAD (Tus contraseñas)
+    function openGate(type) {
+        currentTarget = type;
+        document.getElementById('modal-title').innerText = "Acceso a " + (type === 'prestamista' ? "Ender Prestamista" : "Ender Estudio");
+        document.getElementById('security-modal').style.display = 'flex';
     }
-    render();
+
+    function closeModal() {
+        document.getElementById('security-modal').style.display = 'none';
+        document.getElementById('pass-input').value = "";
+    }
+
+    function checkPass() {
+        const input = document.getElementById('pass-input').value;
+        
+        if (currentTarget === 'prestamista') {
+            if (input === "Ender_987654321") {
+                window.location.href = "https://tu-pagina-web.com/prestamista"; // Pon tu link aquí
+            } else {
+                alert("Clave incorrecta.");
+            }
+        } else if (currentTarget === 'estudio') {
+            if (input === "Ender-123456789") {
+                window.location.href = "https://tu-pagina-web.com/estudio"; // Pon tu link aquí
+            } else {
+                alert("Clave incorrecta.");
+            }
+        }
+    }
 </script>
 
 </body>
