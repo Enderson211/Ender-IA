@@ -3,177 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ender Hub | Pro</title>
+    <title>Ender Hub | Gestión Total</title>
     <style>
         :root {
-            --bg-dark: #0b0e14;
+            --bg-dark: #05070a;
+            --card-bg: #12161f;
             --accent-blue: #00e5ff;
+            --accent-gold: #ffd700;
+            --accent-green: #39ff14;
+            --text-main: #ffffff;
+            --danger: #ff4d4d;
+            --border: #1a202c;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
             margin: 0;
-            padding: 0;
             background-color: var(--bg-dark);
-            font-family: 'Segoe UI', sans-serif;
-            color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-main);
             overflow-x: hidden;
         }
-        /* BARRA DE NAVEGACIÓN SEGURA */
+
+        /* NAVEGACIÓN */
         .navbar {
             position: fixed;
-            top: 0;
-            width: 100%;
-            height: 60px;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
-            border-bottom: 1px solid var(--accent-blue);
+            top: 0; width: 100%; height: 60px;
+            background: rgba(5, 7, 10, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 1000; border-bottom: 1px solid var(--border);
         }
-        .nav-btn {
-            background: none;
-            border: 1px solid var(--accent-blue);
-            color: var(--accent-blue);
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        /* CONTENEDOR DE COLORES INFINITOS */
-        #color-container {
-            margin-top: 70px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            padding: 10px;
-        }
-        .color-card {
-            height: 150px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            padding-bottom: 10px;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px black;
-            font-size: 12px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .color-card:active { transform: scale(0.95); }
 
-        /* MODALES DE CONTRASEÑA */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+        .nav-btn {
+            background: transparent; border: 1px solid var(--accent-blue);
+            color: var(--accent-blue); padding: 8px 12px;
+            border-radius: 6px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: 0.3s;
         }
+
+        /* VISTAS */
+        .view-section {
+            display: none; padding: 80px 15px 20px;
+            min-height: 100vh; animation: fadeIn 0.3s ease;
+        }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* COLORES */
+        .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+        .color-box {
+            height: 90px; border-radius: 10px; display: flex; flex-direction: column;
+            justify-content: flex-end; align-items: center; padding-bottom: 5px;
+            font-size: 9px; font-weight: bold; cursor: pointer; border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* COMPONENTES PRESTAMISTA */
+        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); }
         input {
-            padding: 15px;
-            width: 80%;
-            max-width: 300px;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 18px;
+            width: 100%; padding: 12px; margin: 8px 0;
+            background: #1a202c; border: 1px solid #2d3748;
+            color: white; border-radius: 8px; outline: none;
+        }
+        .btn-action {
+            width: 100%; padding: 12px; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; margin-top: 5px;
+        }
+        .btn-add { background: var(--accent-green); color: #000; }
+        
+        /* TABLA DE REGISTROS */
+        .loan-item {
+            padding: 12px; border-bottom: 1px solid var(--border);
+            display: grid; grid-template-columns: 1fr auto; gap: 10px;
+            align-items: center;
+        }
+        .status-badge {
+            font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;
+        }
+        .status-pending { background: rgba(255, 77, 77, 0.2); color: var(--danger); }
+        .status-paid { background: rgba(57, 255, 20, 0.2); color: var(--accent-green); }
+        
+        .btn-pay { background: var(--accent-blue); color: #000; padding: 5px 8px; border-radius: 4px; border: none; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-trash { background: none; border: none; color: #718096; cursor: pointer; font-size: 14px; }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 5000; justify-content: center; align-items: center; padding: 20px;
         }
     </style>
 </head>
 <body>
 
-<nav class="navbar">
-    <button class="nav-btn" onclick="openGate('prestamista')">E. Prestamista</button>
-    <button class="nav-btn" onclick="openGate('estudio')">E. Estudio</button>
-</nav>
+    <nav class="navbar">
+        <button class="nav-btn" onclick="showView('home')">Colores</button>
+        <button class="nav-btn" onclick="attemptAccess('prestamista')">Prestamista</button>
+        <button class="nav-btn" onclick="attemptAccess('estudio')">Estudio</button>
+    </nav>
 
-<div id="color-container"></div>
+    <!-- COLORES -->
+    <section id="view-home" class="view-section active">
+        <h2 style="color: var(--accent-blue)">Paleta Infinita</h2>
+        <div id="color-container" class="color-grid"></div>
+    </section>
 
-<div id="security-modal" class="modal">
-    <h2 id="modal-title">Acceso Restringido</h2>
-    <input type="password" id="pass-input" placeholder="Ingresa la clave">
-    <button class="nav-btn" onclick="checkPass()">Entrar</button>
-    <button style="margin-top: 10px; color: red; background: none; border: none;" onclick="closeModal()">Cancelar</button>
-</div>
+    <!-- PRESTAMISTA -->
+    <section id="view-prestamista" class="view-section">
+        <h1 style="color: var(--accent-gold)">Ender Prestamista</h1>
+        
+        <div class="card">
+            <h3>Registrar Deuda</h3>
+            <input type="text" id="loan-name" placeholder="Nombre de la persona">
+            <input type="number" id="loan-amount" placeholder="Cantidad prestada ($)">
+            <input type="number" id="loan-interest" placeholder="% Interés (Ej: 10)">
+            <button class="btn-action btn-add" onclick="saveLoan()">GUARDAR REGISTRO</button>
+        </div>
 
-<script>
-    const container = document.getElementById('color-container');
-    let currentTarget = "";
-    
-    // 1. GENERACIÓN DE COLORES OPTIMIZADA
-    // Usamos un observer para no cargar 1 millón de colores de golpe
-    function generateColors(count) {
-        const fragment = document.createDocumentFragment();
-        for (let i = 0; i < count; i++) {
-            const r = Math.floor(Math.random() * 256);
-            const g = Math.floor(Math.random() * 256);
-            const b = Math.floor(Math.random() * 256);
-            const hex = `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`.toUpperCase();
+        <div id="loan-list" class="card">
+            <h3>Cartera de Clientes</h3>
+            <div id="loans-container"></div>
+        </div>
+    </section>
+
+    <!-- ESTUDIO -->
+    <section id="view-estudio" class="view-section">
+        <h1 style="color: var(--accent-blue)">Ender Estudio</h1>
+        <div class="card" style="text-align:center; color:#718096;">
+            <p>Espacio para diseños de EnderVisual.</p>
+        </div>
+    </section>
+
+    <!-- SEGURIDAD -->
+    <div id="modal-security" class="modal-overlay">
+        <div class="modal-content" style="text-align:center; width:100%; max-width:300px;">
+            <h2 id="modal-label">Acceso</h2>
+            <input type="password" id="input-pass" placeholder="Contraseña">
+            <button class="btn-action btn-add" onclick="verifyPassword()" style="background:var(--accent-blue)">ENTRAR</button>
+            <button class="btn-action" style="background:none; color:grey" onclick="closeModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        let currentTargetView = '';
+        
+        function showView(v) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('view-' + v).classList.add('active');
+        }
+
+        function attemptAccess(t) {
+            currentTargetView = t;
+            document.getElementById('modal-security').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-security').style.display = 'none';
+            document.getElementById('input-pass').value = '';
+        }
+
+        function verifyPassword() {
+            const p = document.getElementById('input-pass').value;
+            if (currentTargetView === 'prestamista' && p === "Ender_987654321") { closeModal(); showView('prestamista'); }
+            else if (currentTargetView === 'estudio' && p === "Ender-123456789") { closeModal(); showView('estudio'); }
+            else alert("Clave Incorrecta");
+        }
+
+        // LÓGICA DE PRÉSTAMOS
+        function saveLoan() {
+            const n = document.getElementById('loan-name').value;
+            const a = parseFloat(document.getElementById('loan-amount').value);
+            const i = parseFloat(document.getElementById('loan-interest').value);
+
+            if (!n || isNaN(a) || isNaN(i)) return alert("Faltan datos");
+
+            const total = a + (a * (i / 100));
+            const loan = { id: Date.now(), name: n, base: a, interest: i, total: total, paid: false };
+
+            let loans = JSON.parse(localStorage.getItem('ender_data') || "[]");
+            loans.push(loan);
+            localStorage.setItem('ender_data', JSON.stringify(loans));
             
-            const card = document.createElement('div');
-            card.className = 'color-card';
-            card.style.backgroundColor = hex;
-            card.innerHTML = `<span>${hex}</span>`;
-            card.onclick = () => {
-                navigator.clipboard.writeText(hex);
-                alert('Copiado: ' + hex);
-            };
-            fragment.appendChild(card);
+            document.getElementById('loan-name').value = '';
+            document.getElementById('loan-amount').value = '';
+            document.getElementById('loan-interest').value = '';
+            renderLoans();
         }
-        container.appendChild(fragment);
-        
-        // Optimización: Si hay más de 200 elementos, borramos los primeros para liberar RAM
-        if (container.children.length > 200) {
-            for(let i=0; i<50; i++) container.removeChild(container.firstChild);
+
+        function renderLoans() {
+            const loans = JSON.parse(localStorage.getItem('ender_data') || "[]");
+            const container = document.getElementById('loans-container');
+            container.innerHTML = '';
+
+            loans.forEach(l => {
+                const item = document.createElement('div');
+                item.className = 'loan-item';
+                item.innerHTML = `
+                    <div>
+                        <span class="status-badge ${l.paid ? 'status-paid' : 'status-pending'}">${l.paid ? 'PAGADO' : 'DEBE'}</span><br>
+                        <b style="font-size:16px">${l.name}</b><br>
+                        <small style="color:#718096">Base: $${l.base} (+${l.interest}%)</small>
+                    </div>
+                    <div style="text-align:right">
+                        <span style="font-size:18px; color:var(--accent-green); font-weight:bold">$${l.total.toFixed(2)}</span><br>
+                        ${!l.paid ? `<button class="btn-pay" onclick="markAsPaid(${l.id})">MARCAR PAGADO</button>` : ''}
+                        <button class="btn-trash" onclick="deleteRecord(${l.id})">🗑️</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
         }
-    }
 
-    // Carga inicial
-    generateColors(40);
-
-    // Scroll Infinito
-    window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-            generateColors(20);
-        }
-    });
-
-    // 2. SISTEMA DE SEGURIDAD (Tus contraseñas)
-    function openGate(type) {
-        currentTarget = type;
-        document.getElementById('modal-title').innerText = "Acceso a " + (type === 'prestamista' ? "Ender Prestamista" : "Ender Estudio");
-        document.getElementById('security-modal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('security-modal').style.display = 'none';
-        document.getElementById('pass-input').value = "";
-    }
-
-    function checkPass() {
-        const input = document.getElementById('pass-input').value;
-        
-        if (currentTarget === 'prestamista') {
-            if (input === "Ender_987654321") {
-                window.location.href = "https://tu-pagina-web.com/prestamista"; // Pon tu link aquí
-            } else {
-                alert("Clave incorrecta.");
-            }
-        } else if (currentTarget === 'estudio') {
-            if (input === "Ender-123456789") {
-                window.location.href = "https://tu-pagina-web.com/estudio"; // Pon tu link aquí
-            } else {
-                alert("Clave incorrecta.");
+        function markAsPaid(id) {
+            let loans = JSON.parse(localStorage.getItem('ender_data') || "[]");
+            const idx = loans.findIndex(l => l.id === id);
+            if (idx !== -1) {
+                loans[idx].paid = true;
+                localStorage.setItem('ender_data', JSON.stringify(loans));
+                renderLoans();
             }
         }
-    }
-</script>
 
+        function deleteRecord(id) {
+            if (!confirm("¿Borrar este registro?")) return;
+            let loans = JSON.parse(localStorage.getItem('ender_data') || "[]");
+            loans = loans.filter(l => l.id !== id);
+            localStorage.setItem('ender_data', JSON.stringify(loans));
+            renderLoans();
+        }
+
+        // COLORES INFINITOS
+        function addColors(num) {
+            const grid = document.getElementById('color-container');
+            for(let i=0; i<num; i++) {
+                const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+                const box = document.createElement('div');
+                box.className = 'color-box'; box.style.backgroundColor = hex;
+                box.innerHTML = `<span>${hex}</span>`;
+                box.onclick = () => {
+                    const t = document.createElement('textarea'); t.value = hex; document.body.appendChild(t);
+                    t.select(); document.execCommand('copy'); document.body.removeChild(t);
+                    alert("Copiado: " + hex);
+                };
+                grid.appendChild(box);
+            }
+            if (grid.children.length > 120) for(let i=0; i<20; i++) grid.removeChild(grid.firstChild);
+        }
+
+        // INIT
+        addColors(30);
+        renderLoans();
+        window.onscroll = () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) addColors(10); };
+    </script>
 </body>
 </html>
