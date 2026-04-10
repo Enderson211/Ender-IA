@@ -1,8 +1,8 @@
 --[[
-    ENDER OS v15 - INSANIDY GHOST + TORNADO
-    - Nueva Función: Super Ring Part (Tornado)
-    - Optimización: Limitador de Piezas (Anti-Lag)
-    - Estilo: Neón Cyan con Toggle de Radio
+    ENDER OS v16 - GHOST & TORNADO MANAGEMENT
+    - Control de Radio Dinámico
+    - Limitador de Piezas ajustable por el usuario
+    - Optimización de FPS para dispositivos móviles
 ]]
 
 local Players = game:GetService("Players")
@@ -10,112 +10,122 @@ local RunService = game:GetService("RunService")
 local LPlayer = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
 
--- [1] NÚCLEO DE RED (Para controlar piezas ajenas)
+-- CONFIGURACIÓN INICIAL (GESTIONABLE)
+_G.TornadoData = {
+    Enabled = false,
+    Radius = 30,
+    MaxParts = 40,
+    Speed = 2,
+    Strength = 1800
+}
+
+-- SISTEMA DE RED (NETWORK)
 if not getgenv().Network then
-    getgenv().Network = {BaseParts = {}, Velocity = Vector3.new(14.46, 14.46, 14.46)}
-    local function EnablePartControl()
+    getgenv().Network = {BaseParts = {}, Velocity = Vector3.new(14.47, 14.47, 14.47)}
+    task.spawn(function()
         LPlayer.ReplicationFocus = workspace
         RunService.Heartbeat:Connect(function()
             sethiddenproperty(LPlayer, "SimulationRadius", math.huge)
-            for _, Part in pairs(getgenv().Network.BaseParts) do
-                if Part:IsDescendantOf(workspace) then Part.Velocity = getgenv().Network.Velocity end
+            for _, p in pairs(getgenv().Network.BaseParts) do
+                if p:IsDescendantOf(workspace) then p.Velocity = getgenv().Network.Velocity end
             end
         end)
-    end
-    task.spawn(EnablePartControl)
+    end)
 end
 
--- [2] VARIABLES DEL TORNADO
-local tornadoConfig = {
-    Enabled = false,
-    Radius = 20,
-    MaxParts = 50, -- LIMITE PARA EVITAR LAG
-    Speed = 2,
-    Strength = 1500
-}
-
--- [3] INTERFAZ ACTUALIZADA (v15)
+-- INTERFAZ V16
 local SG = Instance.new("ScreenGui", CoreGui)
 local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 280, 0, 420)
-Main.Position = UDim2.new(0.5, -140, 0.5, -210)
-Main.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 15)
+Main.Size = UDim2.new(0, 300, 0, 450)
+Main.Position = UDim2.new(0.5, -150, 0.5, -225)
+Main.BackgroundColor3 = Color3.fromRGB(12, 12, 15)
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 12)
 
 local Scroll = Instance.new("ScrollingFrame", Main)
 Scroll.Size = UDim2.new(1, -20, 1, -80)
 Scroll.Position = UDim2.new(0, 10, 0, 60)
 Scroll.BackgroundTransparency = 1
 Scroll.CanvasSize = UDim2.new(0, 0, 2.5, 0)
-Instance.new("UIListLayout", Scroll).Padding = UDim.new(0, 10)
+Scroll.ScrollBarThickness = 2
+Instance.new("UIListLayout", Scroll).Padding = UDim.new(0, 8)
 
--- FUNCIÓN PARA BOTONES PRO
-local function AddToggle(name, callback)
-    local b = Instance.new("TextButton", Scroll)
-    b.Size = UDim2.new(1, 0, 0, 45)
-    b.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
-    b.Text = name
-    b.TextColor3 = Color3.new(1, 1, 1)
-    b.Font = Enum.Font.GothamBold
-    Instance.new("UICorner", b)
-    local active = false
-    b.MouseButton1Click:Connect(function()
-        active = not active
-        b.BackgroundColor3 = active and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(25, 25, 30)
-        callback(active)
+-- FUNCIÓN PARA CREAR GESTORES DE VALORES (TEXT + BOTÓN)
+local function AddManager(title, valueKey, step, maxVal)
+    local frame = Instance.new("Frame", Scroll)
+    frame.Size = UDim2.new(1, 0, 0, 60)
+    frame.BackgroundTransparency = 1
+    
+    local label = Instance.new("TextLabel", frame)
+    label.Size = UDim2.new(1, 0, 0, 25)
+    label.Text = title .. ": " .. _G.TornadoData[valueKey]
+    label.TextColor3 = Color3.new(0, 1, 1)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.GothamBold
+    
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(1, 0, 0, 30)
+    btn.Position = UDim2.new(0, 0, 0, 25)
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    btn.Text = "Aumentar (+ " .. step .. ")"
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    Instance.new("UICorner", btn)
+    
+    btn.MouseButton1Click:Connect(function()
+        _G.TornadoData[valueKey] = _G.TornadoData[valueKey] + step
+        if _G.TornadoData[valueKey] > maxVal then _G.TornadoData[valueKey] = step end
+        label.Text = title .. ": " .. _G.TornadoData[valueKey]
     end)
 end
 
--- [4] INTEGRACIÓN DE FUNCIONES
-AddToggle("GOD MODE", function(state)
-    _G.God = state
-    while _G.God do
-        if LPlayer.Character then
-            for _, v in pairs(LPlayer.Character:GetDescendants()) do
-                if v:IsA("BasePart") then v.CanTouch = false end
-            end
-        end
-        task.wait(0.5)
-    end
+-- AGREGAR CONTROLES AL PANEL
+AddManager("RADIO DE GIRO", "Radius", 15, 150)
+AddManager("CANTIDAD DE PIEZAS", "MaxParts", 20, 200)
+
+-- BOTÓN DE ACTIVACIÓN PRINCIPAL
+local Toggle = Instance.new("TextButton", Scroll)
+Toggle.Size = UDim2.new(1, 0, 0, 50)
+Toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+Toggle.Text = "INICIAR TORNADO"
+Toggle.TextColor3 = Color3.new(1, 1, 1)
+Toggle.Font = Enum.Font.GothamBold
+Instance.new("UICorner", Toggle)
+
+Toggle.MouseButton1Click:Connect(function()
+    _G.TornadoData.Enabled = not _G.TornadoData.Enabled
+    Toggle.BackgroundColor3 = _G.TornadoData.Enabled and Color3.fromRGB(0, 150, 100) or Color3.fromRGB(40, 40, 45)
+    Toggle.Text = _G.TornadoData.Enabled and "TORNADO ACTIVO" or "INICIAR TORNADO"
 end)
 
-AddToggle("TORNADO DE PIEZAS", function(state)
-    tornadoConfig.Enabled = state
-end)
-
--- Slider Simple para Radio
-AddToggle("RADIO TORNADO (+20)", function()
-    tornadoConfig.Radius = tornadoConfig.Radius + 20
-    if tornadoConfig.Radius > 200 then tornadoConfig.Radius = 20 end
-    print("Nuevo Radio: "..tornadoConfig.Radius)
-end)
-
--- [5] LÓGICA DEL TORNADO OPTIMIZADA (ANTI-LAG)
+-- LÓGICA DE FÍSICA MEJORADA
 RunService.Heartbeat:Connect(function()
-    if not tornadoConfig.Enabled then return end
+    if not _G.TornadoData.Enabled then return end
     
-    local root = LPlayer.Character and LPlayer.Character:FindFirstChild("HumanoidRootPart")
+    local character = LPlayer.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
     if not root then return end
     
-    local count = 0
+    local currentCount = 0
     for _, part in pairs(workspace:GetDescendants()) do
-        if count >= tornadoConfig.MaxParts then break end -- AQUÍ DETENEMOS EL LAG
+        if currentCount >= _G.TornadoData.MaxParts then break end
         
-        if part:IsA("BasePart") and not part.Anchored and not part:IsDescendantOf(LPlayer.Character) then
-            count = count + 1
-            local dist = (Vector3.new(part.Position.X, root.Position.Y, part.Position.Z) - root.Position).Magnitude
-            local angle = math.atan2(part.Position.Z - root.Position.Z, part.Position.X - root.Position.X)
-            local newAngle = angle + math.rad(tornadoConfig.Speed)
+        if part:IsA("BasePart") and not part.Anchored and not part:IsDescendantOf(character) then
+            currentCount = currentCount + 1
+            local pPos = part.Position
+            local rPos = root.Position
+            
+            local dist = (Vector3.new(pPos.X, rPos.Y, pPos.Z) - rPos).Magnitude
+            local angle = math.atan2(pPos.Z - rPos.Z, pPos.X - rPos.X)
+            local newAngle = angle + math.rad(_G.TornadoData.Speed)
             
             local targetPos = Vector3.new(
-                root.Position.X + math.cos(newAngle) * math.min(tornadoConfig.Radius, dist),
-                root.Position.Y + 5, -- Elevación fija para que se vea como anillo
-                root.Position.Z + math.sin(newAngle) * math.min(tornadoConfig.Radius, dist)
+                rPos.X + math.cos(newAngle) * math.min(_G.TornadoData.Radius, dist),
+                rPos.Y + 5,
+                rPos.Z + math.sin(newAngle) * math.min(_G.TornadoData.Radius, dist)
             )
             
-            part.Velocity = (targetPos - part.Position).Unit * tornadoConfig.Strength
+            part.Velocity = (targetPos - pPos).Unit * _G.TornadoData.Strength
         end
     end
 end)
 
-print("Ender OS v15: Tornado de Piezas optimizado y cargado.")
+print("Ender OS v16: Control de gestión de piezas activado.")
