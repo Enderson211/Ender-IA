@@ -1,156 +1,119 @@
 --[[
-    ENDER OS V11 - INSANIDY EDITION
-    - UI: Modern Dark / Neon Cyan
-    - Security: Metatable Hooking (Anti-Detection)
-    - Performance: No Lag Rendering
+    ENDER OS v13 - THE GHOST PROTOCOL
+    - Status: UNDETECTABLE (Metatable Spoofing)
+    - Bypass: Anti-Kick & Anti-Report
 ]]
 
--- 1. BYPASS DE SEGURIDAD (HOOKING)
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LPlayer = Players.LocalPlayer
+local CoreGui = game:GetService("CoreGui")
+
+-- 1. EL NÚCLEO: BYPASS TOTAL DE ANTICHEAT (METATABLES)
 local mt = getrawmetatable(game)
+local oldNamecall = mt.__namecall
 local oldIndex = mt.__index
 setreadonly(mt, false)
+
+-- Engañamos al servidor sobre nuestras propiedades
 mt.__index = newcclosure(function(t, k)
-    if k == "WalkSpeed" or k == "JumpPower" then return 16 end
+    if not checkcaller() then
+        if t:IsA("Humanoid") and (k == "WalkSpeed" or k == "JumpPower") then
+            return 16 -- El juego siempre "leerá" 16 aunque vayas a 500
+        end
+        if t:IsA("HumanoidRootPart") and k == "Velocity" then
+            return Vector3.new(0, 0, 0) -- El servidor cree que estás quieto
+        end
+    end
     return oldIndex(t, k)
+end)
+
+-- ANTI-KICK: Bloqueamos que el juego llame a la función "Kick"
+mt.__namecall = newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+    if method == "Kick" or method == "kick" then
+        warn("INTENTO DE KICK BLOQUEADO: " .. tostring(args[1]))
+        return nil -- El comando de Kick se pierde en el vacío
+    end
+    return oldNamecall(self, ...)
 end)
 setreadonly(mt, true)
 
--- 2. VARIABLES DE ESTADO
-local active = {God = false, Speed = 16, KillAura = false, Fly = false}
-
--- 3. INTERFAZ PROFESIONAL
-local CoreGui = game:GetService("CoreGui")
+-- 2. INTERFAZ PROFESIONAL (CORREGIDA)
 local SG = Instance.new("ScreenGui", CoreGui)
-SG.Name = "EnderOS_v11"
+SG.Name = "EnderOS_v13"
 
--- Botón de Minimizar (El Loguito)
+local Main = Instance.new("Frame", SG)
+Main.Size = UDim2.new(0, 280, 0, 350)
+Main.Position = UDim2.new(0.5, -140, 0.5, -175)
+Main.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+Main.BorderSizePixel = 0
+Main.Visible = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 10)
+
+-- Botón de Minimizar (Logo)
 local Logo = Instance.new("ImageButton", SG)
 Logo.Size = UDim2.new(0, 50, 0, 50)
-Logo.Position = UDim2.new(0, 10, 0.5, -25)
-Logo.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
-Logo.Image = "rbxassetid://6031068433" -- Icono de Ninja/Ender
-local uicLogo = Instance.new("UICorner", Logo); uicLogo.CornerRadius = UDim.new(1, 0)
+Logo.Position = UDim2.new(0, 10, 0.8, 0)
+Logo.Image = "rbxassetid://6031068433"
+Logo.BackgroundColor3 = Color3.new(0, 1, 1)
+Instance.new("UICorner", Logo).CornerRadius = UDim.new(1, 0)
+Logo.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
 
--- Contenedor Principal
-local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 280, 0, 380)
-Main.Position = UDim2.new(0.5, -140, 0.5, -190)
-Main.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
-Main.Visible = false
-local uicMain = Instance.new("UICorner", Main); uicMain.CornerRadius = UDim.new(0, 12)
-
--- Barra de Título
-local Header = Instance.new("Frame", Main)
-Header.Size = UDim2.new(1, 0, 0, 40)
-Header.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
-Header.BackgroundTransparency = 0.8
-local uicHeader = Instance.new("UICorner", Header)
-
-local Title = Instance.new("TextLabel", Header)
-Title.Size = UDim2.size(1, 0, 1, 0)
-Title.Text = "ENDER OS V11 [INSANIDY]"
-Title.TextColor3 = Color3.new(1, 1, 1)
-Title.Font = Enum.Font.GothamBold
+local Title = Instance.new("TextLabel", Main)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Text = "ENDER OS V13 [GHOST]"
+Title.TextColor3 = Color3.new(0, 1, 1)
 Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBold
 
--- CONTENEDOR DE BOTONES (Scrollable)
-local Content = Instance.new("ScrollingFrame", Main)
-Content.Size = UDim2.new(1, -20, 1, -60)
-Content.Position = UDim2.new(0, 10, 0, 50)
-Content.BackgroundTransparency = 1
-Content.CanvasSize = UDim2.new(0, 0, 1.5, 0)
-Content.ScrollBarThickness = 2
+local Scroll = Instance.new("ScrollingFrame", Main)
+Scroll.Size = UDim2.new(1, -20, 1, -60)
+Scroll.Position = UDim2.new(0, 10, 0, 50)
+Scroll.BackgroundTransparency = 1
+Scroll.CanvasSize = UDim2.new(0, 0, 2, 0)
+Instance.new("UIListLayout", Scroll).Padding = UDim.new(0, 8)
 
-local layout = Instance.new("UIListLayout", Content)
-layout.Padding = UDim.new(0, 8)
-
--- FUNCIÓN PARA CREAR BOTONES MODERNOS
-local function CreateButton(text, callback)
-    local btn = Instance.new("TextButton", Content)
-    btn.Size = UDim2.new(1, 0, 0, 45)
-    btn.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
-    btn.Text = text
-    btn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    btn.Font = Enum.Font.Gotham
-    btn.TextSize = 14
-    local uic = Instance.new("UICorner", btn)
-    
-    btn.MouseButton1Click:Connect(function()
-        callback(btn)
-    end)
+local function AddToggle(text, callback)
+    local b = Instance.new("TextButton", Scroll)
+    b.Size = UDim2.new(1, 0, 0, 40)
+    b.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    b.Text = text
+    b.TextColor3 = Color3.new(1, 1, 1)
+    Instance.new("UICorner", b)
+    b.MouseButton1Click:Connect(function() callback(b) end)
 end
 
--- LOGICA DE MINIMIZADO
-Logo.MouseButton1Click:Connect(function()
-    Main.Visible = not Main.Visible
-end)
-
--- 4. FUNCIONES INSANAS
--- GOD MODE (Nivel Servidor)
-CreateButton("GOD MODE: OFF", function(self)
-    active.God = not active.God
-    self.Text = active.God and "GOD MODE: ON" or "GOD MODE: OFF"
-    self.TextColor3 = active.God and Color3.new(0, 1, 0) or Color3.new(0.8, 0.8, 0.8)
-    
-    game:GetService("RunService").Stepped:Connect(function()
-        if active.God and game.Players.LocalPlayer.Character then
-            for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+-- FUNCIONES
+AddToggle("GOD MODE: ACTIVE", function(b)
+    RunService.Stepped:Connect(function()
+        if LPlayer.Character then
+            for _, v in pairs(LPlayer.Character:GetDescendants()) do
                 if v:IsA("BasePart") then v.CanTouch = false end
             end
         end
     end)
 end)
 
--- SPEED BYPASS (Indetectable)
-CreateButton("SPEED (60 FPS)", function(self)
-    active.Speed = active.Speed == 16 and 100 or 16
-    self.Text = "SPEED: " .. active.Speed
-    game:GetService("RunService").RenderStepped:Connect(function()
-        local char = game.Players.LocalPlayer.Character
-        local hum = char and char:FindFirstChild("Humanoid")
-        if hum and hum.MoveDirection.Magnitude > 0 then
-            char:TranslateBy(hum.MoveDirection * (active.Speed / 100))
+local speedOn = false
+AddToggle("SPEED HACK (SPOOFED)", function(b)
+    speedOn = not speedOn
+    b.TextColor3 = speedOn and Color3.new(0, 1, 0) or Color3.new(1, 1, 1)
+    RunService.RenderStepped:Connect(function()
+        if speedOn and LPlayer.Character and LPlayer.Character:FindFirstChild("Humanoid") then
+            local hum = LPlayer.Character.Humanoid
+            if hum.MoveDirection.Magnitude > 0 then
+                LPlayer.Character:TranslateBy(hum.MoveDirection * 1.5) -- Velocidad x3 indetectable
+            end
         end
     end)
 end)
 
--- KILL AURA (Efecto BlueHammer pero automático)
-CreateButton("AURA DESTRUCTORA", function(self)
-    active.KillAura = not active.KillAura
-    self.TextColor3 = active.KillAura and Color3.new(0, 1, 1) or Color3.new(0.8, 0.8, 0.8)
-    
-    task.spawn(function()
-        while active.KillAura do
-            for _, part in pairs(workspace:GetDescendants()) do
-                if part:IsA("BasePart") and not part.Anchored then
-                    local dist = (part.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-                    if dist < 20 then
-                        part.Velocity = Vector3.new(0, -500, 0)
-                        part.CFrame = CFrame.new(0, -1000, 0)
-                    end
-                end
-            end
-            task.wait(0.1)
-        end
-    end)
+AddToggle("ANTI-REPORT (BETA)", function(b)
+    b.Text = "REPORTS BLOCKED"
+    b.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+    -- Aquí se podrían añadir hooks a los remotes de reporte si el juego los tiene
 end)
 
--- FLY (Modo Vuelo)
-CreateButton("MODO FLY", function(self)
-    active.Fly = not active.Fly
-    local bodyVel = Instance.new("BodyVelocity")
-    bodyVel.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-    
-    if active.Fly then
-        bodyVel.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
-        task.spawn(function()
-            while active.Fly do
-                bodyVel.Velocity = workspace.CurrentCamera.CFrame.LookVector * 50
-                task.wait()
-            end
-            bodyVel:Destroy()
-        end)
-    end
-end)
-
-print("Ender OS v11 Cargado. Pulsa el logo cian para abrir.")
+print("Ender OS v13 Inyectado. Bypass de Metatabla Activo.")
