@@ -1,57 +1,162 @@
+/* RESET DE ESTILOS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'JetBrains Mono', monospace;
+}
+
 :root {
-    --primary: #00ff00; /* Verde Neón */
-    --bg: #0a0a0a;
-    --card-bg: #1a1a1a;
-    --text: #ffffff;
+    --bg-dark: #050a0f;
+    --card-bg: #0d1721;
+    --primary-blue: #00d9ff; /* Azul clarito neón */
+    --secondary-blue: #005f73;
+    --text-main: #e1f5fe;
+    --accent-glow: rgba(0, 217, 255, 0.3);
 }
 
 body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    text-align: center;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
+/* HEADER */
 header {
-    padding: 50px 20px;
-    border-bottom: 2px solid var(--primary);
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, #001a2c, var(--bg-dark));
+    border-bottom: 1px solid var(--secondary-blue);
+    text-shadow: 0 0 10px var(--accent-glow);
 }
 
-h1 span { color: var(--primary); }
+h1 {
+    font-size: 3rem;
+    letter-spacing: 5px;
+}
 
-.card-container {
+h1 span {
+    color: var(--primary-blue);
+}
+
+.status-bar {
+    font-size: 0.8rem;
+    color: var(--primary-blue);
+    margin-top: 10px;
+    letter-spacing: 2px;
+}
+
+.dot {
+    height: 8px;
+    width: 8px;
+    background-color: var(--primary-blue);
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    box-shadow: 0 0 8px var(--primary-blue);
+}
+
+/* CONTENEDOR DE TARJETAS */
+.section-title {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 1.5rem;
+    color: var(--primary-blue);
+}
+
+.card-grid {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 30px;
     padding: 20px;
 }
 
+/* TARJETAS (CARDS) */
 .card {
     background: var(--card-bg);
-    border: 1px solid #333;
-    border-radius: 10px;
-    padding: 20px;
-    width: 280px;
-    transition: 0.3s;
+    width: 350px;
+    border: 1px solid var(--secondary-blue);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.4s ease;
 }
 
 .card:hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
+    transform: translateY(-10px);
+    border-color: var(--primary-blue);
+    box-shadow: 0 10px 30px rgba(0, 217, 255, 0.1);
 }
 
-.card img {
+.card-header {
+    background: rgba(0, 217, 255, 0.05);
+    padding: 10px;
+    border-bottom: 1px solid var(--secondary-blue);
+}
+
+.tag {
+    font-size: 0.7rem;
+    background: var(--secondary-blue);
+    padding: 2px 8px;
+    border-radius: 2px;
+}
+
+.card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.preview-img {
     width: 100%;
-    border-radius: 5px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #1a2a3a;
 }
 
-.btn {
-    display: inline-block;
-    background: var(--primary);
-    color: black;
-    padding: 10px 20px;
+.card-body h3 {
+    margin-bottom: 10px;
+    color: var(--primary-blue);
+}
+
+.card-body p {
+    font-size: 0.9rem;
+    color: #a0b0c0;
+    margin-bottom: 20px;
+    height: 60px;
+}
+
+/* BOTONES */
+.download-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--primary-blue);
+    color: var(--primary-blue);
     text-decoration: none;
     font-weight: bold;
-    border-radius: 5px;
-    margin-top: 15px;
-  }
+    transition: 0.3s;
+}
+
+.download-btn:hover {
+    background: var(--primary-blue);
+    color: var(--bg-dark);
+}
+
+.download-btn.secondary {
+    border-color: #64b5f6;
+    color: #64b5f6;
+}
+
+footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 0.8rem;
+    color: #444;
+    }
