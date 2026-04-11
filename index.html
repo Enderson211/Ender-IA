@@ -12,24 +12,61 @@
     <header>
         <h1>ENDER<span>STUDIO</span></h1>
         <div class="status-bar">
-            <span class="dot"></span> SISTEMA ACTIVO
+            <span id="system-status"><span class="dot"></span> SISTEMA ACTIVO</span>
         </div>
     </header>
 
     <main>
-        <div id="admin-panel" style="display: none;">
-            <button onclick="uploadPlugin()" class="admin-btn">+ SUBIR NUEVO PLUGIN</button>
+        <div id="admin-panel" style="display: none; padding: 10px;">
+            <button onclick="uploadPlugin()" class="admin-btn">+ SUBIR ARCHIVOS AL REPO</button>
         </div>
 
         <section id="plugins-section">
-            <h2 class="section-title">MIS PLUGINS</h2>
+            <h2 class="section-title">REPOSITORIO DE PLUGINS</h2>
+            
             <div class="card-grid">
                 
                 <div class="card">
                     <div class="card-body">
-                        <h3>EnderShield 4.0</h3>
-                        <p>Protección PaperMC 1.21.1</p>
-                        <a href="plugins/EnderShield-4.0.jar" class="download-btn">DESCARGAR</a>
+                        <span class="version">v4.0</span>
+                        <h3>EnderShield</h3>
+                        <p class="desc-short">Protección avanzada con configuración externa (config.yml) y alertas asíncronas vía <strong>Webhooks de Discord</strong>.</p>
+                        
+                        <div class="info-box" id="info-shield">
+                            <h4>DETALLES TÉCNICOS:</h4>
+                            <ul>
+                                <li>Logs detallados en canal de Discord.</li>
+                                <li>Configuración de prefijos y colores &.</li>
+                                <li>Optimizado para PaperMC/Spigot 1.21.1.</li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group">
+                            <a href="plugins/EnderShield-4.0.jar" class="download-btn">DESCARGAR JAR</a>
+                            <button class="info-btn" onclick="toggleInfo('info-shield')">MÁS INFO</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <span class="version">ELITE</span>
+                        <h3>EnderSentinel</h3>
+                        <p class="desc-short">Sistema de seguridad de élite especializado en denegación de hacks y reportes en tiempo real por <strong>Discord</strong>.</p>
+                        
+                        <div class="info-box" id="info-sentinel">
+                            <h4>DETALLES TÉCNICOS:</h4>
+                            <ul>
+                                <li>Detección de movimientos inusuales.</li>
+                                <li>Integración inmediata con bots de Discord.</li>
+                                <li>Sistema de auditoría de IPs sospechosas.</li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group">
+                            <a href="plugins/EnderSentinel.jar" class="download-btn">DESCARGAR JAR</a>
+                            <button class="info-btn" onclick="toggleInfo('info-sentinel')">MÁS INFO</button>
+                        </div>
                     </div>
                 </div>
 
@@ -38,5 +75,12 @@
     </main>
 
     <script src="script.js"></script>
+    <script>
+        // Función extra solo para mostrar/ocultar la info sin dañar tu script.js principal
+        function toggleInfo(id) {
+            const box = document.getElementById(id);
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
 </body>
-</html>
+                            </html>
