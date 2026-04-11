@@ -1,1 +1,57 @@
+:root {
+    --primary: #00ff00; /* Verde Neón */
+    --bg: #0a0a0a;
+    --card-bg: #1a1a1a;
+    --text: #ffffff;
+}
 
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    text-align: center;
+}
+
+header {
+    padding: 50px 20px;
+    border-bottom: 2px solid var(--primary);
+}
+
+h1 span { color: var(--primary); }
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 20px;
+    width: 280px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.btn {
+    display: inline-block;
+    background: var(--primary);
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 15px;
+  }
