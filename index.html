@@ -30,19 +30,29 @@
                     <div class="card-body">
                         <span class="version">v4.0</span>
                         <h3>EnderShield</h3>
-                        <p class="desc-short">Protección avanzada con configuración externa (config.yml) y alertas asíncronas vía <strong>Webhooks de Discord</strong>.</p>
+                        <p class="desc-short">Protección avanzada con alertas vía <strong>Discord Webhooks</strong>.</p>
                         
                         <div class="info-box" id="info-shield">
-                            <h4>DETALLES TÉCNICOS:</h4>
-                            <ul>
-                                <li>Logs detallados en canal de Discord.</li>
-                                <li>Configuración de prefijos y colores &.</li>
-                                <li>Optimizado para PaperMC/Spigot 1.21.1.</li>
-                            </ul>
+                            <h4>¿CÓMO CONFIGURAR DISCORD?</h4>
+                            
+                            <div class="guide-section">
+                                <strong>💻 DESDE PC:</strong>
+                                <p>1. Ajustes del Canal > Integraciones.<br>2. Crear Webhook > Copiar URL.</p>
+                            </div>
+                            
+                            <div class="guide-section">
+                                <strong>📱 DESDE ANDROID:</strong>
+                                <p>1. Usa Discord en el navegador (Modo Escritorio).<br>2. Ve a Integraciones y genera el Webhook.</p>
+                            </div>
+
+                            <div class="guide-section">
+                                <strong>⚙️ INSTALACIÓN:</strong>
+                                <p>Pega la URL en el archivo <code>config.yml</code> del plugin y reinicia el servidor.</p>
+                            </div>
                         </div>
 
                         <div class="btn-group">
-                            <a href="plugins/EnderShield-4.0.jar" class="download-btn">DESCARGAR JAR</a>
+                            <a href="plugins/EnderShield-4.0.jar" class="download-btn">DESCARGAR</a>
                             <button class="info-btn" onclick="toggleInfo('info-shield')">MÁS INFO</button>
                         </div>
                     </div>
@@ -52,19 +62,24 @@
                     <div class="card-body">
                         <span class="version">ELITE</span>
                         <h3>EnderSentinel</h3>
-                        <p class="desc-short">Sistema de seguridad de élite especializado en denegación de hacks y reportes en tiempo real por <strong>Discord</strong>.</p>
+                        <p class="desc-short">Seguridad de élite y reportes en tiempo real por <strong>Discord</strong>.</p>
                         
                         <div class="info-box" id="info-sentinel">
-                            <h4>DETALLES TÉCNICOS:</h4>
-                            <ul>
-                                <li>Detección de movimientos inusuales.</li>
-                                <li>Integración inmediata con bots de Discord.</li>
-                                <li>Sistema de auditoría de IPs sospechosas.</li>
-                            </ul>
+                            <h4>INSTRUCCIONES DE USO:</h4>
+                            
+                            <div class="guide-section">
+                                <strong>🤖 EL BOT:</strong>
+                                <p>Este plugin requiere que el Webhook tenga permisos de "Gestionar Mensajes" en el canal.</p>
+                            </div>
+
+                            <div class="guide-section">
+                                <strong>🚀 FUNCIONAMIENTO:</strong>
+                                <p>Detecta Fly, KillAura y movimientos falsos, enviando la captura de datos directo a tu servidor de Discord.</p>
+                            </div>
                         </div>
 
                         <div class="btn-group">
-                            <a href="plugins/EnderSentinel.jar" class="download-btn">DESCARGAR JAR</a>
+                            <a href="plugins/EnderSentinel.jar" class="download-btn">DESCARGAR</a>
                             <button class="info-btn" onclick="toggleInfo('info-sentinel')">MÁS INFO</button>
                         </div>
                     </div>
@@ -76,11 +91,10 @@
 
     <script src="script.js"></script>
     <script>
-        // Función extra solo para mostrar/ocultar la info sin dañar tu script.js principal
         function toggleInfo(id) {
             const box = document.getElementById(id);
             box.style.display = (box.style.display === 'block') ? 'none' : 'block';
         }
     </script>
 </body>
-                            </html>
+    </html>
