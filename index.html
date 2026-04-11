@@ -3,29 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EnderStudio | Plugins & Scripts</title>
+    <title>EnderStudio | Oficial</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>ENDER<span>STUDIO</span></h1>
-        <p>Desarrollo de Plugins de Minecraft y Scripts de Roblox</p>
+
+    <div id="particles-js"></div> <header>
+        <div class="logo-area">
+            <h1>ENDER<span>STUDIO</span></h1>
+            <div class="status-bar">
+                <span class="dot"></span> SISTEMA ONLINE
+            </div>
+        </div>
+        <nav>
+            <p>Repositorio central de Plugins y Scripts de Alta Gama</p>
+        </nav>
     </header>
 
     <main>
-        <section id="plugins">
-            <h2>Mis Plugins (Minecraft)</h2>
-            <div class="card-container">
+        <section id="plugins-section">
+            <h2 class="section-title">PORTAFOLIO DE DESARROLLO</h2>
+            
+            <div class="card-grid">
                 <div class="card">
-                    <img src="imagenes/placeholder.png" alt="Icono Plugin">
-                    <h3>EnderShield 4.0</h3>
-                    <p>Protección avanzada contra ataques en servidores PaperMC.</p>
-                    <a href="plugins/EnderShield-4.0.jar" class="btn">Descargar .JAR</a>
+                    <div class="card-header">
+                        <span class="tag">MINECRAFT</span>
+                    </div>
+                    <div class="card-body">
+                        <img src="imagenes/placeholder_mc.png" alt="Minecraft Plugin" class="preview-img">
+                        <h3>EnderShield 4.0</h3>
+                        <p>Sistema avanzado de seguridad para PaperMC. Protección contra ataques de red y filtrado de paquetes.</p>
+                        <a href="plugins/EnderShield-4.0.jar" class="download-btn">DESCARGAR JAR</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="tag">ROBLOX</span>
+                    </div>
+                    <div class="card-body">
+                        <img src="imagenes/placeholder_rbx.png" alt="Roblox Script" class="preview-img">
+                        <h3>Main Roblox Script</h3>
+                        <p>Script optimizado para ejecutores Delta. Lógica de alto rendimiento para sistemas de juego.</p>
+                        <a href="main.lua" class="download-btn secondary">VER SCRIPT LUA</a>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <footer>
+        <p>&copy; 2026 EnderStudio. Desarrollado por Enderson Soto.</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
-      </html>
+                            </html>
